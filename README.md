@@ -65,4 +65,4 @@ optional arguments:
 
 ## Contributing
 
-See [`CONTRIBUTING.md`]('CONTRIBUTING.md') for developer instructions.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for developer instructions.
