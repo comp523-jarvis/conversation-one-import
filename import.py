@@ -27,6 +27,7 @@ def main():
     process_file(interaction_rules, args.import_root)
 
     shutil.make_archive(args.outfile, 'zip', tempdir)
+    shutil.rmtree(tempdir)
 
 
 def parse_args(args):
