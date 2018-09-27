@@ -17,6 +17,24 @@ The script will insert the contents of `yourCustomCodeFile.js` between the tags.
 
 ## Usage
 
+### Workflow
+
+First export your conversation.one project using the "Export All Rules" option.
+
+![Export All Rules](/docs/images/Export.png)
+
+Then run the script, passing in the archive you just created.
+
+```
+./import.py path/to/exported/archive.zip output.zip
+```
+
+Now you can import the archive back in to your project by uploading the `output.zip` file created by the script.
+
+![Import All Rules](/docs/images/Import.png)
+
+### CLI Parameters
+
 ```
 usage: import.py [-h] [--import-root IMPORT_ROOT] infile outfile
 

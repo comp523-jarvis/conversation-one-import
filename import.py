@@ -3,7 +3,9 @@
 import argparse
 import os
 import re
+import shutil
 import sys
+import tempfile
 import zipfile
 
 
@@ -18,14 +20,13 @@ def extract_archive(source, dest_path):
 def main():
     args = parse_args(sys.argv[1:])
 
-    dest_path = os.path.join(os.getcwd(), 'extracted')
-    if not os.path.isdir(dest_path):
-        os.mkdir(dest_path)
+    tempdir = tempfile.mkdtemp()
+    extract_archive(args.infile, tempdir)
 
-    extract_archive(args.infile, dest_path)
-
-    interaction_rules = os.path.join(dest_path, 'Basic rules', 'interaction_rules.js')
+    interaction_rules = os.path.join(tempdir, 'Basic rules', 'interaction_rules.js')
     process_file(interaction_rules, args.import_root)
+
+    shutil.make_archive(args.outfile, 'zip', tempdir)
 
 
 def parse_args(args):
