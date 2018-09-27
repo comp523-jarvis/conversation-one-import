@@ -1,5 +1,7 @@
 # Conversation.one Import
 
+[![Travis (.com)](https://img.shields.io/travis/com/comp523-jarvis/conversation-one-import.svg)](https://travis-ci.com/comp523-jarvis/conversation-one-import)
+
 This is a script to dynamically insert code into an archive from conversation.one and repack the archive. The repacked archive can then be imported back into the conversation.one project.
 
 ## Features
