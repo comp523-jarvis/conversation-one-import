@@ -34,7 +34,7 @@ First export your conversation.one project using the "Export All Rules" option.
 Then run the script, passing in the archive you just created.
 
 ```
-./import.py path/to/exported/archive.zip output.zip
+./process.py path/to/exported/archive.zip output.zip
 ```
 
 #### Import
@@ -46,7 +46,7 @@ Now you can import the archive back in to your project by uploading the `output.
 ### CLI Parameters
 
 ```
-usage: import.py [-h] [--import-root IMPORT_ROOT] [-v] infile outfile
+usage: process.py [-h] [--import-root IMPORT_ROOT] [-v] infile outfile
 
 Insert dynamic imports into an export archive from conversation.one
 
