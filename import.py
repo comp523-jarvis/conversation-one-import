@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import argparse
 import logging
@@ -73,7 +73,7 @@ def parse_args(args):
     parser.add_argument(
         'infile',
         help="The exported archive to process.",
-        type=argparse.FileType(),
+        type=argparse.FileType('rb'),
     )
     parser.add_argument(
         'outfile',
@@ -92,6 +92,7 @@ def parse_args(args):
         '-v',
         '--verbose',
         action='count',
+        default=0,
         help=("A flag to increase the verbosity of the script's output. "
               "Including the flag multiple times will increase the "
               "verbosity."),
