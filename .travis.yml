@@ -9,7 +9,9 @@ install:
   - pip install pipenv
   - pipenv install --dev
 
-script: pipenv run pytest
+script:
+  - pipenv run flake8
+  - pipenv run pytest
 
 notifications:
   email:

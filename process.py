@@ -98,7 +98,11 @@ def main():
     extract_archive(args.infile, tempdir)
 
     # Process the files to insert our dynamic imports.
-    interaction_rules = os.path.join(tempdir, 'Basic rules', 'interaction_rules.js')
+    interaction_rules = os.path.join(
+        tempdir,
+        'Basic rules',
+        'interaction_rules.js',
+    )
     process_file(interaction_rules, args.import_root)
 
     # Pack the new archive and remove the extracted copy
