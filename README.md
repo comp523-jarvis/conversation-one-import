@@ -17,6 +17,10 @@ The script will insert the contents of `yourCustomCodeFile.js` between the tags.
 
 ## Usage
 
+### Requirements
+
+A Unix environment with Python 3 installed and accessible from `PATH`.
+
 ### Workflow
 
 First export your conversation.one project using the "Export All Rules" option.

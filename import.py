@@ -16,6 +16,16 @@ VERBOSITY_LEVELS = [
 ]
 
 
+IMPORT_DIRECTIVE_PATTERN = re.compile(
+    r'^// import (?P<filename>[a-zA-Z0-9_\-\.]*)$'
+    r'.*?'
+    r'^// end (?P=filename)$',
+    # There can be multiple lines between the start and end of the
+    # directive, so we require the following flags.
+    re.MULTILINE | re.DOTALL,
+)
+
+
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 
@@ -27,6 +37,46 @@ def extract_archive(source, dest_path):
     with zipfile.ZipFile(source) as archive:
         archive.extractall(dest_path)
         logger.debug("Extracted archive to '%s'", dest_path)
+
+
+def insert_imports(content, import_root):
+    """
+    Scan the provided content for import directives and insert the
+    appropriate new content.
+
+    Args:
+        content:
+            The content containing the import directives to perform.
+        import_root:
+            The root directory to search for imports from. The file path
+            referenced in each ``// import <file>`` directive will be
+            appended to the import root when opening the file to import.
+
+    Returns:
+        The provided content with all import directives completed.
+    """
+    logger.debug("Start import processing")
+
+    def replace_func(match):
+        logger.debug("Processing chunk:\n%s", match.group(0))
+        filename = match.group('filename')
+
+        import_path = os.path.join(import_root, filename)
+        with open(import_path, 'r') as f:
+            code = f.read()
+
+        logger.info("Inserted contents of %s", import_path)
+
+        return '// import {filename}\n{content}\n// end {filename}'.format(
+            content=code,
+            filename=filename,
+        )
+
+    new_content = re.sub(IMPORT_DIRECTIVE_PATTERN, replace_func, content)
+
+    logger.debug("End import processing")
+
+    return new_content
 
 
 def main():
@@ -103,7 +153,7 @@ def parse_args(args):
 
 def process_file(path, import_root):
     """
-    Process the imports in a single file.
+    Process a single file.
 
     Args:
         path:
@@ -113,33 +163,17 @@ def process_file(path, import_root):
             referenced in each ``// import <file>`` directive will be
             appended to the import root when opening the file to import.
     """
-    pattern = re.compile(
-        r'^// import ([a-zA-Z0-9_\-\.]*)$.*?^// end ([a-zA-Z0-9_\-\.]*)$',
-        re.MULTILINE | re.DOTALL,
-    )
+    logger.debug("Start processing %s", path)
 
     with open(path, 'r') as f:
         content = f.read()
     logger.debug("Read contents of %s", path)
 
-    def replace_func(match):
-        logger.debug("Processing chunk:\n%s", match.group(0))
-        filename = match.group(1)
-
-        path = os.path.join(import_root, filename)
-        with open(path, 'r') as f:
-            code = f.read()
-
-        return '// import {filename}\n{content}\n// end {filename}'.format(
-            content=code,
-            filename=filename,
-        )
-
-    new_content = re.sub(pattern, replace_func, content)
+    new_content = insert_imports(content, import_root)
     with open(path, 'w') as f:
         f.write(new_content)
 
-    logger.info("Successfully processed imports in %s", path)
+    logger.debug("End processing %s", path)
 
 
 if __name__ == '__main__':
