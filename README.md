@@ -23,15 +23,21 @@ A Unix environment with Python 3 installed and accessible from `PATH`.
 
 ### Workflow
 
+#### Export
+
 First export your conversation.one project using the "Export All Rules" option.
 
 ![Export All Rules](/docs/images/Export.png)
+
+#### Process
 
 Then run the script, passing in the archive you just created.
 
 ```
 ./import.py path/to/exported/archive.zip output.zip
 ```
+
+#### Import
 
 Now you can import the archive back in to your project by uploading the `output.zip` file created by the script.
 
@@ -40,7 +46,7 @@ Now you can import the archive back in to your project by uploading the `output.
 ### CLI Parameters
 
 ```
-usage: import.py [-h] [--import-root IMPORT_ROOT] infile outfile
+usage: import.py [-h] [--import-root IMPORT_ROOT] [-v] infile outfile
 
 Insert dynamic imports into an export archive from conversation.one
 
@@ -52,4 +58,11 @@ optional arguments:
   -h, --help            show this help message and exit
   --import-root IMPORT_ROOT
                         The root directory to search for imports from.
+  -v, --verbose         A flag to increase the verbosity of the script's
+                        output. Including the flag multiple times will
+                        increase the verbosity.
 ```
+
+## Contributing
+
+See [`CONTRIBUTING.md`]('CONTRIBUTING.md') for developer instructions.
