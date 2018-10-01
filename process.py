@@ -58,7 +58,7 @@ def insert_imports(content, import_root):
     logger.debug("Start import processing")
 
     def replace_func(match):
-        logger.debug("Processing chunk:\n%s", match.group(0))
+        logger.debug("Found import directive:\n%s", match.group(0))
         filename = match.group('filename')
 
         import_path = os.path.join(import_root, filename)
@@ -88,26 +88,26 @@ def main():
     """
     args = parse_args(sys.argv[1:])
 
+    # Clamp verbosity level to allowable range
     logger.setLevel(
         VERBOSITY_LEVELS[max(0, min(len(VERBOSITY_LEVELS) - 1, args.verbose))],
     )
 
-    # Extract the archive
-    tempdir = tempfile.mkdtemp()
-    logger.debug("Create temporary directory: %s", tempdir)
-    extract_archive(args.infile, tempdir)
+    with tempfile.TemporaryDirectory() as tempdir:
+        # Extract the archive
+        logger.debug("Create temporary directory: %s", tempdir)
+        extract_archive(args.infile, tempdir)
 
-    # Process the files to insert our dynamic imports.
-    interaction_rules = os.path.join(
-        tempdir,
-        'Basic rules',
-        'interaction_rules.js',
-    )
-    process_file(interaction_rules, args.import_root)
+        # Process the files to insert our dynamic imports.
+        interaction_rules = os.path.join(
+            tempdir,
+            'Basic rules',
+            'interaction_rules.js',
+        )
+        process_file(interaction_rules, args.import_root)
 
-    # Pack the new archive and remove the extracted copy
-    shutil.make_archive(args.outfile, 'zip', tempdir)
-    shutil.rmtree(tempdir)
+        # Pack the new archive
+        shutil.make_archive(args.outfile, 'zip', tempdir)
 
 
 def parse_args(args):
