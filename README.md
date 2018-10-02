@@ -47,18 +47,26 @@ Before you can run the script, you need some information from Conversation.one a
 
 ![App Information](/docs/images/AppInformation.png)
 
+To ease the process of running the command later, export that information in your shell. For Mac or Linux, this looks like:
+
+```
+export CONVERSATION_APP_ID=<Your App ID>
+export CONVERSATION_APP_KEY=<Your API Key>
+```
+
+You may also specify your credentials using the environment (otherwise they are passed in as CLI arguments).
+
+```
+export GOOGLE_EMAIL=<Your Google Email>
+export GOOGLE_PASSWORD=<Your Google Password>
+```
+
 ##### Process and Import
 
 Now you can run the script and your Conversation.one project will be modified in place.
 
 ```
-pipenv run process.py \
-    --auto-import \
-    --app-id $APP_ID \
-    --app-key $APP_KEY \
-    --google-email $GOOGLE_EMAIL \
-    --google-password $GOOGLE_PASSWORD \
-    --import-path path/to/directory/with/intent/code
+pipenv run process.py --auto-import --import-path path/to/directory/with/intent/code
 ```
 
 ### Manual Import and Export

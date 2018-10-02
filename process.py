@@ -128,6 +128,35 @@ def get_arg_parser():
     return parser
 
 
+def get_env_opt(flag, env_var):
+    """
+    Get a default for a command line flag from the environment.
+
+    Args:
+        flag:
+            The name of the command line flag that the environment
+            variable is the default for.
+        env_var:
+            The name of the environment variable to look up.
+
+    Returns:
+        The provided environment variable.
+
+    Raises:
+        ImproperlyConfiguredException:
+            If the provided environment variable does not exist.
+    """
+    attr = os.environ.get(env_var)
+
+    if attr is None:
+        raise ImproperlyConfiguredException(
+            f'Either the --{flag} flag or the {env_var} '
+            'environment variable must be set.'
+        )
+
+    return attr
+
+
 def insert_imports(content, import_root):
     """
     Scan the provided content for import directives and insert the
@@ -256,29 +285,17 @@ def parse_args():
                 "ensure the requirements are installed and try again."
             )
 
-        if not args.app_id:
-            raise ImproperlyConfiguredException(
-                "The '--app-id' option must be set if the '--auto-import' "
-                "flag is used."
-            )
+        required_flags = (
+            ('app-id', 'CONVERSATION_APP_ID'),
+            ('app-key', 'CONVERSATION_APP_KEY'),
+            ('google-email', 'GOOGLE_EMAIL'),
+            ('google-password', 'GOOGLE_PASSWORD'),
+        )
 
-        if not args.app_key:
-            raise ImproperlyConfiguredException(
-                "The '--app-key' option must be set if the '--auto-import' "
-                "flag is used."
-            )
-
-        if not args.google_email:
-            raise ImproperlyConfiguredException(
-                "The '--google-email' option must be set if the "
-                "'--auto-import' flag is used."
-            )
-
-        if not args.google_password:
-            raise ImproperlyConfiguredException(
-                "The '--google-password' option must be set if the "
-                "'--auto-import' flag is used."
-            )
+        for flag, env_var in required_flags:
+            flag_attr = flag.replace('-', '_')
+            if not getattr(args, flag_attr, None):
+                setattr(args, flag_attr, get_env_opt(flag, env_var))
     else:
         logger.debug('Validating arguments for local import')
 
