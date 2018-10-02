@@ -106,8 +106,14 @@ def main():
         )
         process_file(interaction_rules, args.import_root)
 
+        # If a zip extension is provided, remove it because it will be
+        # added later.
+        outfile = args.outfile
+        if outfile.endswith('.zip'):
+            outfile = outfile[:-4]
+
         # Pack the new archive
-        shutil.make_archive(args.outfile, 'zip', tempdir)
+        shutil.make_archive(outfile, 'zip', tempdir)
 
 
 def parse_args(args):
@@ -138,7 +144,8 @@ def parse_args(args):
     parser.add_argument(
         '--import-root',
         default=os.getcwd(),
-        help="The root directory to search for imports from.",
+        help=("The root directory to search for imports from. Defaults to the "
+              "current working directory."),
         type=str,
     )
 
